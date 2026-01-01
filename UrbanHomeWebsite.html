@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanHome Essentials</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styling to ensure visuals match your screenshots exactly */
+        .sale-section { background: #3b49df; color: white; padding: 4rem 2rem; margin: 4rem 0; }
+        .timer-box { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); padding: 1rem; border-radius: 12px; text-align: center; min-width: 85px; }
+        .timer-val { font-size: 2rem; font-weight: 800; display: block; }
+        .timer-label { font-size: 0.75rem; text-transform: uppercase; opacity: 0.8; }
+        .benefit-card { display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; }
+        .badge { position: absolute; top: 15px; left: 15px; padding: 4px 12px; border-radius: 4px; color: white; font-size: 0.75rem; font-weight: 700; z-index: 10; }
+        .hidden { display: none !important; }
+        /* Fix for animations staying invisible */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-content-between items-center" style="width: 100%;">
+            <div class="logo" onclick="showHome()">
+                <div class="logo-icon"><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg></div>
+                <span>UrbanHome</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="showHome()">Home</a>
+                <a href="#categories" onclick="showHome()">Categories</a>
+                <a href="#featured" onclick="showHome()">New Arrivals</a>
+                <a href="#sale" onclick="showHome()">Sale</a>
+                <a href="#about" onclick="showHome()">About</a>
+                <a href="#" onclick="showOrders()">My Orders</a>
+            </div>
+            <div class="flex gap-4 items-center">
+                <button class="icon cart-btn" onclick="toggleCart()">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" width="24" height="24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="cart-overlay" class="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-body" id="cart-items">
+            <div class="text-center text-muted mt-4">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total-row"><span>Total</span><span id="cart-total">₹0</span></div>
+            <button onclick="openCheckout()" class="btn btn-primary w-full">Checkout</button>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Secure Checkout</h3>
+                <button onclick="closeCheckout()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="cust-name" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shipping Address</label>
+                    <input type="text" class="form-input" id="cust-address" placeholder="123 Urban St, City">
+                </div>
+                <button class="btn btn-primary w-full mt-4" onclick="processPayment()">
+                    <span id="pay-btn-text">Confirm & Pay Now</span>
+                    <div id="pay-spinner" style="display:none;">Processing Order...</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="home-view">
+        <section class="hero">
+            <div class="container grid-2 items-center" style="padding: 3rem 0 2rem;">
+                <div class="fade-in">
+                    <span style="background:#e0f2fe; color:#1e3a8a; padding:0.4rem 1rem; border-radius:99px; font-weight:600;">New Collection 2025</span>
+                    <h1 style="font-size: 3.5rem; margin-top:1rem;">Transform Your Space with <span>Modern Essentials</span></h1>
+                    <p class="text-muted mb-8 text-lg">Curated home products that blend style and functionality.</p>
+                    <div class="flex gap-4">
+                        <a href="#featured" class="btn btn-primary">Shop Now</a>
+                        <a href="#categories" class="btn btn-outline">Categories</a>
+                    </div>
+                </div>
+                <div class="fade-in"><img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000" class="hero-img"></div>
+            </div>
+        </section>
+
+        <section class="container" style="padding: 2rem 0 3rem;">
+            <div class="grid-4">
+                <div class="benefit-card"><div>🚚</div><div><strong>Free Shipping</strong><p class="text-sm text-muted">Orders over ₹999</p></div></div>
+                <div class="benefit-card"><div>🔒</div><div><strong>Secure Payment</strong><p class="text-sm text-muted">100% Protected</p></div></div>
+                <div class="benefit-card"><div>↩️</div><div><strong>Easy Returns</strong><p class="text-sm text-muted">30 Days Policy</p></div></div>
+                <div class="benefit-card"><div>💬</div><div><strong>24/7 Support</strong><p class="text-sm text-muted">Dedicated Help</p></div></div>
+            </div>
+        </section>
+
+        <section id="categories" class="section">
+            <div class="container">
+                <div class="section-header flex justify-between items-center mb-8">
+                    <div><h2>Shop by Category</h2><p class="text-muted">Find exactly what you need</p></div>
+                    <a href="#" class="text-brand font-bold">View All →</a>
+                </div>
+                <div class="grid-4">
+                    <div class="cat-card fade-in" onclick="showCategory('living-room')">
+                        <div class="cat-img"><img src="https://images.unsplash.com/photo-1567016507665-356928ac6679?w=600"></div>
+                        <h3>Living Room</h3><p class="text-sm text-muted">250+ Products</p>
+                    </div>
+                    <div class="cat-card fade-in" onclick="showCategory('bedroom')">
+                        <div class="cat-img"><img src="https://images.unsplash.com/photo-1505693314120-0d443867891c?w=600"></div>
+                        <h3>Bedroom</h3><p class="text-sm text-muted">180+ Products</p>
+                    </div>
+                    <div class="cat-card fade-in" onclick="showCategory('kitchen')">
+                        <div class="cat-img"><img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600"></div>
+                        <h3>Kitchen</h3><p class="text-sm text-muted">320+ Products</p>
+                    </div>
+                    <div class="cat-card fade-in" onclick="showCategory('furniture')">
+                        <div class="cat-img"><img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600"></div>
+                        <h3>Furniture</h3><p class="text-sm text-muted">150+ Products</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured" class="section bg-light">
+            <div class="container">
+                <div class="text-center mb-12"><h2>Featured Products</h2><p class="text-muted">Best-selling items loved by thousands</p></div>
+                <div class="grid-4">
+                    <div class="card fade-in">
+                        <div class="prod-img" onclick="showProduct('bedding')"><span class="badge" style="background:#ef4444">Sale</span><img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600"></div>
+                        <div class="prod-details"><h3>Luxe Bedding</h3><div class="prod-price"><span class="price-now">₹4,999</span><span class="price-old">₹7,999</span></div><button class="btn btn-primary w-full mt-4" onclick="addToCartDB('bedding')">Add to Cart</button></div>
+                    </div>
+                    <div class="card fade-in">
+                        <div class="prod-img" onclick="showProduct('sofa')"><span class="badge" style="background:#1e293b">Trending</span><img src="https://images.unsplash.com/photo-1550226891-ef816aed4a98?w=600"></div>
+                        <div class="prod-details"><h3>Velvet Sofa</h3><div class="prod-price"><span class="price-now">₹12,999</span><span class="price-old">₹15,999</span></div><button class="btn btn-primary w-full mt-4" onclick="addToCartDB('sofa')">Add to Cart</button></div>
+                    </div>
+                    <div class="card fade-in">
+                        <div class="prod-img" onclick="showProduct('lamp')"><span class="badge" style="background:#3b49df">New</span><img src="https://images.unsplash.com/photo-1507473888900-52e1adad54cd?w=600"></div>
+                        <div class="prod-details"><h3>Floor Lamp</h3><div class="prod-price"><span class="price-now">₹1,899</span></div><button class="btn btn-primary w-full mt-4" onclick="addToCartDB('lamp')">Add to Cart</button></div>
+                    </div>
+                    <div class="card fade-in">
+                        <div class="prod-img" onclick="showProduct('vase')"><img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=600"></div>
+                        <div class="prod-details"><h3>Ceramic Vase</h3><div class="prod-price"><span class="price-now">₹899</span><span class="price-old">₹1,299</span></div><button class="btn btn-primary w-full mt-4" onclick="addToCartDB('vase')">Add to Cart</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sale" class="sale-section">
+            <div class="container flex justify-between items-center">
+                <div class="fade-in">
+                    <span style="background:#facc15; color:#854d0e; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:800;">LIMITED TIME</span>
+                    <h2 style="font-size:3rem; margin:1rem 0;">End of Season Sale</h2>
+                    <p class="text-lg">Get up to 50% OFF on selected items.</p>
+                </div>
+                <div class="flex gap-4 fade-in">
+                    <div class="timer-box"><span class="timer-val">02</span><span class="timer-label">Days</span></div>
+                    <div class="timer-box"><span class="timer-val">14</span><span class="timer-label">Hrs</span></div>
+                    <div class="timer-box"><span class="timer-val">35</span><span class="timer-label">Mins</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section container grid-2 items-center" style="gap:3rem; padding: 3rem 0;">
+            <div class="fade-in"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800" style="border-radius:24px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);"></div>
+            <div class="fade-in">
+                <span class="text-brand font-bold uppercase text-sm">About Us</span>
+                <h2 style="font-size:3rem; margin:1rem 0;">Designed for Living</h2>
+                <p class="text-muted text-lg">UrbanHome started with a simple mission: to make high-quality, design-forward furniture accessible to everyone.</p>
+                
+                <!-- Customer Ratings & Stats -->
+                <div class="grid-3" style="margin-top: 2.5rem; gap: 2rem;">
+                    <div class="stat-item">
+                        <span class="stat-val">4.8★</span>
+                        <p class="text-sm text-muted">Customer Rating</p>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val">50K+</span>
+                        <p class="text-sm text-muted">Happy Customers</p>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val">98%</span>
+                        <p class="text-sm text-muted">Satisfaction Rate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="section" style="background: linear-gradient(135deg, #3b49df, #4338ca); color: white;">
+            <div class="container text-center" style="max-width: 700px;">
+                <div class="fade-in">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Stay Updated</h2>
+                    <p class="text-lg" style="opacity: 0.9; margin-bottom: 2rem;">Subscribe to our newsletter for exclusive deals, new arrivals, and design inspiration delivered to your inbox.</p>
+                    
+                    <form class="sub-form" onsubmit="handleSubscribe(event)" style="margin: 0 auto;">
+                        <input type="email" id="subscribe-email" class="sub-input" placeholder="Enter your email address" required>
+                        <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Subscribe</button>
+                    </form>
+                    
+                    <p class="text-sm" style="margin-top: 1rem; opacity: 0.7;">✓ Exclusive offers  ✓ No spam  ✓ Unsubscribe anytime</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="orders-view" class="hidden container section" style="padding: 5rem 0;">
+        <button onclick="showHome()" class="btn btn-outline mb-8">← Back to Shopping</button>
+        <h2 class="mb-8">My Order History</h2>
+        <div id="orders-content"></div>
+    </div>
+
+    <div id="detail-view" class="hidden container section" style="padding: 5rem 0;">
+        <button onclick="showHome()" class="btn btn-outline mb-8">← Back to Home</button>
+        <div id="detail-content"></div>
+    </div>
+
+    <footer class="footer section bg-light" style="padding: 4rem 0; border-top: 1px solid #eee;">
+        <div class="container text-center">
+            <h3>UrbanHome Essentials</h3>
+            <p class="text-muted mt-2">&copy; 2025 All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA & STORAGE ---
+        let cart = JSON.parse(localStorage.getItem('urban_cart')) || [];
+        let orders = JSON.parse(localStorage.getItem('urban_orders')) || [];
+
+        function saveToStorage() {
+            localStorage.setItem('urban_cart', JSON.stringify(cart));
+            localStorage.setItem('urban_orders', JSON.stringify(orders));
+            updateCartUI();
+        }
+
+        // --- CORE FUNCTIONS ---
+        window.addToCartDB = (id) => {
+            const products = {
+                'bedding': {title: 'Luxe Bedding', price: 4999, img: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=200'},
+                'sofa': {title: 'Velvet Sofa', price: 12999, img: 'https://images.unsplash.com/photo-1550226891-ef816aed4a98?w=200'},
+                'lamp': {title: 'Floor Lamp', price: 1899, img: 'https://images.unsplash.com/photo-1507473888900-52e1adad54cd?w=200'},
+                'vase': {title: 'Ceramic Vase', price: 899, img: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=200'}
+            };
+            const item = products[id];
+            const exists = cart.find(c => c.title === item.title);
+            if(exists) exists.qty++; else cart.push({...item, qty: 1});
+            saveToStorage(); toggleCart();
+        };
+
+        window.openCheckout = () => {
+            if(cart.length === 0) return alert("Cart is empty!");
+            toggleCart();
+            document.getElementById('checkout-modal').classList.add('open');
+        };
+
+        window.closeCheckout = () => document.getElementById('checkout-modal').classList.remove('open');
+
+        window.processPayment = () => {
+            const name = document.getElementById('cust-name').value;
+            if(!name) return alert("Please enter your name!");
+
+            document.getElementById('pay-btn-text').style.display = 'none';
+            document.getElementById('pay-spinner').style.display = 'block';
+
+            setTimeout(() => {
+                const newOrder = {
+                    id: Math.random().toString(36).substr(2, 9).toUpperCase(),
+                    date: new Date().toISOString(),
+                    items: [...cart],
+                    total: cart.reduce((s, i) => s + (i.price * i.qty), 0),
+                    customer: name
+                };
+                orders.push(newOrder);
+                cart = [];
+                saveToStorage();
+                
+                alert("Payment Successful! Order Placed.");
+                document.getElementById('pay-btn-text').style.display = 'block';
+                document.getElementById('pay-spinner').style.display = 'none';
+                closeCheckout();
+                showOrders();
+            }, 1500);
+        };
+
+        window.showOrders = () => {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('orders-view').classList.remove('hidden');
+            const cont = document.getElementById('orders-content');
+            if(orders.length === 0) {
+                cont.innerHTML = '<p class="text-center text-muted">No orders yet.</p>';
+            } else {
+                cont.innerHTML = orders.slice().reverse().map(o => `
+                    <div class="card mb-6" style="padding: 2rem; border: 1px solid #eee; margin-bottom: 1.5rem;">
+                        <div class="flex justify-between items-center mb-4">
+                            <div><h3 class="font-bold">Order #${o.id}</h3><p class="text-sm text-muted">${new Date(o.date).toLocaleString()}</p></div>
+                            <div class="text-brand font-bold text-xl">₹${o.total}</div>
+                        </div>
+                        <div style="border-top: 1px solid #eee; padding-top: 1rem;">
+                            ${o.items.map(i => `<p class="text-sm">• ${i.title} (x${i.qty}) - ₹${i.price * i.qty}</p>`).join('')}
+                        </div>
+                    </div>`).join('');
+            }
+            window.scrollTo(0,0);
+        };
+
+        window.showHome = () => {
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('orders-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.add('hidden');
+        };
+
+        window.toggleCart = () => {
+            document.getElementById('cart-drawer').classList.toggle('open');
+            document.getElementById('cart-overlay').classList.toggle('open');
+        };
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const itemsCont = document.getElementById('cart-items');
+            badge.innerText = cart.length;
+            badge.classList.toggle('show', cart.length > 0);
+            
+            if(cart.length === 0) {
+                itemsCont.innerHTML = '<div class="text-center text-muted mt-4">Your cart is empty</div>';
+            } else {
+                itemsCont.innerHTML = cart.map(i => `
+                    <div class="flex justify-between items-center mb-4" style="border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">
+                        <div><strong>${i.title}</strong><br><small>₹${i.price} x ${i.qty}</small></div>
+                        <div class="font-bold">₹${i.price * i.qty}</div>
+                    </div>`).join('');
+            }
+            document.getElementById('cart-total').innerText = '₹' + cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        }
+
+        // --- ANIMATION OBSERVER ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Initial UI Load
+        updateCartUI();
+
+        // Newsletter subscription handler
+        window.handleSubscribe = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('subscribe-email').value;
+            if(email) {
+                alert(`Thank you for subscribing! We'll send updates to ${email}`);
+                document.getElementById('subscribe-email').value = '';
+            }
+        };
+    </script>
+</body>
+</html>
