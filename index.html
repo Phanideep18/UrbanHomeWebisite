@@ -34,6 +34,7 @@
                 <a href="#featured" onclick="showHome()">New Arrivals</a>
                 <a href="#sale" onclick="showHome()">Sale</a>
                 <a href="#about" onclick="showHome()">About</a>
+                <a href="#feedback" onclick="showHome()">Feedback</a>
                 <a href="#" onclick="showOrders()">My Orders</a>
             </div>
             <div class="flex gap-4 items-center">
@@ -215,6 +216,43 @@
                 </div>
             </div>
         </section>
+
+        <!-- Feedback Section -->
+        <section id="feedback" class="section" style="background: linear-gradient(135deg, #f8fafc, #e0f2fe);">
+            <div class="container" style="max-width: 600px;">
+                <div class="fade-in" style="background: white; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 3rem;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">We Value Your Feedback</h2>
+                        <p class="text-muted">Help us improve your shopping experience</p>
+                    </div>
+
+                    <div id="feedback-success-msg" style="display: none; background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; text-align: center; font-weight: 600;">
+                        ✓ Thank you! Your feedback has been submitted successfully.
+                    </div>
+
+                    <form id="feedback-form" onsubmit="handleFeedback(event)">
+                        <div class="form-group">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" id="user-name" class="form-input" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="user-email" class="form-input" placeholder="your.email@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Your Feedback</label>
+                            <textarea id="user-feedback" class="form-input" rows="5" placeholder="Share your thoughts, suggestions, or concerns..." required style="resize: vertical;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-full">
+                            Submit Feedback
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
     </div>
 
     <div id="orders-view" class="hidden container section" style="padding: 5rem 0;">
@@ -363,6 +401,39 @@
                 alert(`Thank you for subscribing! We'll send updates to ${email}`);
                 document.getElementById('subscribe-email').value = '';
             }
+        };
+
+        // Feedback form handler
+        window.handleFeedback = (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const feedback = document.getElementById('user-feedback').value;
+
+            // Store feedback in localStorage
+            const feedbackData = {
+                name: name,
+                email: email,
+                feedback: feedback,
+                date: new Date().toISOString()
+            };
+
+            // Get existing feedback or create new array
+            let allFeedback = JSON.parse(localStorage.getItem('urban_feedback')) || [];
+            allFeedback.push(feedbackData);
+            localStorage.setItem('urban_feedback', JSON.stringify(allFeedback));
+
+            // Show success message
+            document.getElementById('feedback-success-msg').style.display = 'block';
+            
+            // Reset form
+            document.getElementById('feedback-form').reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('feedback-success-msg').style.display = 'none';
+            }, 5000);
         };
     </script>
 </body>
