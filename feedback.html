@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - UrbanHome Essentials</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .feedback-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc, #e0f2fe);
+            padding: 2rem;
+        }
+        .feedback-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+        }
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .feedback-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .feedback-header p {
+            color: var(--muted);
+        }
+        .success-message {
+            display: none;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <div class="feedback-card fade-in visible">
+            <div class="feedback-header">
+                <div class="logo" style="justify-content: center; margin-bottom: 1rem;">
+                    <div class="logo-icon">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    <span>UrbanHome</span>
+                </div>
+                <h1>We Value Your Feedback</h1>
+                <p>Help us improve your shopping experience</p>
+            </div>
+
+            <div id="success-msg" class="success-message">
+                ✓ Thank you! Your feedback has been submitted successfully.
+            </div>
+
+            <form id="feedback-form" onsubmit="handleFeedback(event)">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" id="user-name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="user-email" class="form-input" placeholder="your.email@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Your Feedback</label>
+                    <textarea id="user-feedback" class="form-input" rows="5" placeholder="Share your thoughts, suggestions, or concerns..." required style="resize: vertical;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">
+                    Submit Feedback
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="index.html" style="color: var(--brand); font-weight: 600; font-size: 0.875rem;">
+                    ← Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleFeedback(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const feedback = document.getElementById('user-feedback').value;
+
+            // Store feedback in localStorage
+            const feedbackData = {
+                name: name,
+                email: email,
+                feedback: feedback,
+                date: new Date().toISOString()
+            };
+
+            // Get existing feedback or create new array
+            let allFeedback = JSON.parse(localStorage.getItem('urban_feedback')) || [];
+            allFeedback.push(feedbackData);
+            localStorage.setItem('urban_feedback', JSON.stringify(allFeedback));
+
+            // Show success message
+            document.getElementById('success-msg').classList.add('show');
+            
+            // Reset form
+            document.getElementById('feedback-form').reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('success-msg').classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
