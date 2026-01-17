@@ -135,6 +135,14 @@ window.handleFeedback = (e) => {
     const email = document.getElementById('user-email').value;
     const feedback = document.getElementById('user-feedback').value;
 
+    // Email validation using regex
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address (e.g., user@example.com)');
+        return;
+    }
+
     // Store feedback in localStorage
     const feedbackData = {
         name: name,
